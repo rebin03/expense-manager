@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 
 {% block main %}
-<div class="container">
-    <div class="col-md-4">
+<div class="container full-height item-center">
+    <div class="col-md-4 mx-auto my-auto shadow">
         <form action="" method="post">
             {% csrf_token %}
             {{form}}
-            <button type="submit">add</button>
+            <div class="d-grid col-9 mx-auto">
+                <button class="btn btn-primary my-2" type="submit">{{action}}</button>
+            </div>
         </form>
     </div>
 </div>

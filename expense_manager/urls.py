@@ -20,7 +20,11 @@ from expense import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.SignUpView.as_view(), name='signup'),
+    path('signup/', views.SignUpView.as_view(), name='signup'),
     path('signin/', views.SignInView.as_view(), name='signin'),
+    path('', views.SignInView.as_view(), name='signin'),
+    path('signout/', views.SignOutView.as_view(), name='signout'),
     path('index/', views.indexView.as_view(), name='index'),
+    path('expense/remove/<int:pk>', views.ExpenceDeleteView.as_view(), name='expense-delete'),
+    path('expense/change/<int:pk>', views.ExpenseUpdateView.as_view(), name='expense-update'),
 ]

@@ -1,0 +1,141 @@
+* {
+    font-family: "Roboto", serif;
+}
+
+body {
+    background-color: #ebc3db;
+}
+
+.full-height {
+    min-height: 100vh;
+}
+
+.item-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-container1{
+    background: url("../images/signup.png") center no-repeat;
+    background-size: cover;
+    height: 100vh;
+}
+
+.image-container2{
+    background: url("../images/login.png") center no-repeat;
+    background-size: cover;
+    height: 100vh;
+}
+
+
+.form-container{
+    background-color: #9f84bd;
+    display: flex;
+    justify-content: center;
+}
+
+.form-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.form-box h4{
+    font-weight: bold;
+    color: #fff;
+}
+
+.form-box .form-input{
+    position: relative;
+}
+
+.form-box .form-input input{
+    width: 100%;
+    height: 40px;
+    margin-bottom: 20px;
+    border:none;
+    border-radius: 5px;
+    outline: none;
+    background: white;
+    padding-left: 45px;
+}
+
+.form-box .form-input span{
+    position: absolute;
+    top: 8px;
+    padding-left: 20px;
+    color: #777;
+}
+
+.form-box .form-input input::placeholder{
+    padding-left: 0px;
+}
+
+.form-box .form-input input:focus,
+.form-box .form-input input:valid{
+    border-bottom: 2px solid #48403d;
+}
+
+.form-box input[type="checkbox"]:not(:checked) + label:before{
+    background: transparent;
+    border: 2px solid #fff;
+    width: 15px;
+    height: 15px;
+}
+
+.form-box .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before{
+    background-color: #48403d;
+    border: 0px;
+}
+
+.forget-link, .register-link, .login-link{
+    color: #ede3e9;
+    font-weight: bold;
+}
+
+.forget-link:hover, .register-link:hover, .login-link:hover{
+    color: #292525;
+}
+
+.form-box button[type="submit"], .form-btn {
+    border: none;
+    cursor: pointer;
+    width: 150px;
+    height: 40px;
+    border-right: 5px;
+    background-color: #444444;
+    color: #ffffff;
+    font-weight: bold;
+    transition: 0.5s;
+}
+
+
+.form-box button[type="submit"]:hover, .form-btn:hover {
+    box-shadow: 0px 9px 10px -2px rgba(0,0,0,0.55);
+    -webkit-box-shadow: 0px 9px 10px -2px rgba(0,0,0,0.55);
+    -moz-box-shadow: 0px 9px 10px -2px rgba(0,0,0,0.55);
+    background-color: #444444;
+    color: white;
+}
+
+.bg-first {
+    background-color: #9f84bd;
+}
+
+.bg-second {
+    background-color: #c09bd8;
+}
+
+.bg-second-subtle {
+    background-color: #ede3e9;
+}
+
+.bg-payment {
+    background-color: #64A6A0;
+}
+
+.expense-item-border {
+    border: 2px solid #9f84bd;
+}

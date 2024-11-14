@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-6 col-md-6 d-none d-md-block image-container2"></div>
+		
+		<div class="col-lg-6 col-md-6 form-container">
+			<div class="col-lg-8 col-md-12 col-sm-9 col-xs-12 form-box text-center">
+				<div class="logo mb-3">
+					<img src="{% static 'images/logo.png' %}" width="200px">
+				</div>
+				<div class="heading mb-4">
+					<h4>Login into your account</h4>
+				</div>
+				<form  method="post">
+					{% csrf_token %}
+					<div class="form-input">
+						<span><i class="fa fa-user"></i></span>
+						<input type="text" placeholder="Username" name="username" required>
+					</div>
+					<div class="form-input">
+						<span><i class="fa fa-lock"></i></span>
+						<input type="password" placeholder="Password" name="password" required>
+					</div>
+					
+					<div class="text-center mb-3">
+						<button type="submit" class="btn">Login</button>
+					</div>
+
+					<div style="color: #333">Don't have an account?
+						<a href="{% url 'signup' %}" class="register-link">Register here</a>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<div class="container-fluid">
+	<div class="row inner-container">
+		<div class="col-lg-6 col-md-6 form-container">
+			<div class="col-lg-8 col-md-12 col-sm-9 col-xs-12 form-box text-center">
+				<div class="logo mb-3">
+					<img src="{% static 'images/logo.png' %}" width="200px">
+				</div>
+				<div class="heading mb-4">
+					<h4>Create an account</h4>
+				</div>
+				<form method="post">
+					{% csrf_token %}
+					<div class="form-input">
+						<span><i class="fa fa-user"></i></span>
+						<!-- {{form.username}} -->
+						<input type="text" placeholder="Username" name="username" required>
+					</div>
+					<div class="form-input">
+						<span><i class="fa fa-envelope"></i></span>
+						<!-- {{form.email}} -->
+						<input type="email" placeholder="Email Address" name="email" required>
+					</div>
+					<div class="form-input">
+						<span><i class="fa fa-lock"></i></span>
+						<!-- {{form.password1}} -->
+						<input type="password" placeholder="Password" name="password1" required>
+					</div>
+					<div class="form-input">
+						<span><i class="fa fa-lock"></i></span>
+						<!-- {{form.password2}} -->
+						<input type="password" placeholder="Confirm Password" name="password2" required>
+					</div>
+					<div class="form-input">
+						<span><i class="fa fa-lock"></i></span>
+						<!-- {{form.phone}} -->
+						<input type="text" placeholder="Phone" name="phone" required>
+					</div>
+					
+					<div class="text-center mb-3">
+						<button type="submit" class="btn">Register</button>
+					</div>
+
+					<div style="color: #333">Already have an account?
+						<a href="{% url 'signin' %}" class="login-link">Login here</a>
+					</div>
+
+				</form>
+			</div>
+		</div>
+		<div class="col-lg-6 col-md-6 d-none d-md-block image-container1"></div>
+	</div>
+</div>
+{% endblock %}
