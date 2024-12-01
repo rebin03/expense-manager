@@ -6,6 +6,8 @@ from expense.models import Expense
 from expense.decorators import signin_required
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
+from django.db.models import Sum
+from django.db.models.functions import TruncMonth
 
 # Create your views here.
 
@@ -141,3 +143,42 @@ class ExpenseUpdateView(View):
             return redirect('index')
         
         return render(request, self.template_name, {'form':form})
+
+@method_decorator(decorators, name='dispatch')
+class ExpenseSummaryView(View):
+    
+    template_name = 'expense_summary.html'
+
+    def get(self, request, *args, **kwargs):
+        
+        total_expense = Expense.objects.filter(owner=request.user).values('amount').aggregate(Sum('amount')).get('amount__sum')
+        
+        food_expense = Expense.objects.filter(category='Food', owner=request.user).values('amount').aggregate(Sum('amount')).get('amount__sum')
+        travel_expense = Expense.objects.filter(category='Travel', owner=request.user).values('amount').aggregate(Sum('amount')).get('amount__sum')
+        entertainment_expense = Expense.objects.filter(category='Entertainment', owner=request.user).values('amount').aggregate(Sum('amount')).get('amount__sum')
+        health_expense = Expense.objects.filter(category='Health Care', owner=request.user).values('amount').aggregate(Sum('amount')).get('amount__sum')
+        miscellaneous_expense = Expense.objects.filter(category='Miscellaneous', owner=request.user).values('amount').aggregate(Sum('amount')).get('amount__sum')
+        
+        category_expenses = [food_expense, travel_expense, entertainment_expense, health_expense, miscellaneous_expense]
+        
+        card_expense = Expense.objects.filter(payment_method='card', owner=request.user).values('amount').aggregate(Sum('amount')).get('amount__sum')
+        cash_expense = Expense.objects.filter(payment_method='cash', owner=request.user).values('amount').aggregate(Sum('amount')).get('amount__sum')
+        upi_expense = Expense.objects.filter(payment_method='upi', owner=request.user).values('amount').aggregate(Sum('amount')).get('amount__sum')
+        
+        payment_expenses = [card_expense, cash_expense, upi_expense]
+        
+        expense_obj = Expense.objects.get(id=1)
+        print(expense_obj.created_at.strftime("%B"))
+        
+        monthly_expenses = Expense.objects.filter(owner=request.user).annotate(month=TruncMonth('created_at')).values('month').annotate(total=Sum('amount')).order_by('month')
+        monthly_expenses_data = [expense['total'] for expense in monthly_expenses]
+        print(monthly_expenses_data)
+    
+        context = {
+            'total_expense':total_expense, 
+            'category_expenses':category_expenses,
+            'payment_expenses':payment_expenses,
+            'monthly_expenses_data':monthly_expenses_data
+        }
+        
+        return render(request, self.template_name, context)

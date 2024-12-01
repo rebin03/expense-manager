@@ -1,0 +1,243 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Summary</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> 
+    <style>
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #ebc3db;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        .navbar-light {
+            background-color: #C09BD8;
+        }
+
+        .navbar-light .navbar-brand, .navbar-light .nav-link {
+            color: #fff;
+        }
+
+        h2, h5 {
+            color: #3f3f3f;
+        }
+
+        h6 {
+            color: #746487;
+        }
+
+        .summary-card {
+            border: 1px solid #ebc3db;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #9f84bd;
+        }
+
+        .text-muted {
+            color: #ead5ff !important;
+        }
+
+        canvas {
+            background-color: #ebc3db;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .navbar-light {
+                text-align: center;
+            }
+
+            .navbar-light .navbar-brand {
+                display: block;
+                margin: 0 auto;
+            }
+
+            .navbar-light .nav-link {
+                font-size: 14px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .summary-card h5,
+            .summary-card h3 {
+                font-size: 1.25rem;
+            }
+
+            .row {
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            /* Stack columns on smaller screens */
+            .col-md-4, .col-md-8 {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            /* Make charts fit the screen size */
+            canvas {
+                width: 100% !important;
+                height: auto !important;
+            }
+
+            /* Adjust dashboard button */
+            .position-absolute {
+                top: 10px;
+                right: 10px;
+                font-size: 14px;
+            }
+
+            /* Stack pie charts on smaller screens */
+            .col-md-6 {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h5 {
+                font-size: 1rem;
+            }
+
+            h6 {
+                font-size: 0.875rem;
+            }
+
+            .summary-card {
+                padding: 15px;
+            }
+
+            .col-md-4 {
+                margin-bottom: 20px;
+            }
+
+            .col-md-8 {
+                margin-bottom: 20px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <a href="{% url 'index' %}" class="nav-link position-absolute p-2" style="top:9px; right: 80px;"><span><button class="btn btn-dark btn-sm"><small>Dashboard</small></button></span></a>
+    <a href="{% url 'index' %}"><span class="position-absolute top-0 p-2 fs-5 text-dark" style="left:9px;"><img src="{% static 'images/logo.png' %}" alt="" style="width: 130px;"></span></a>
+    <a href="{% url 'signout' %}"><i class="fas fa-sign-out-alt position-absolute text-dark top-0 end-0 p-3 pe-4 fs-2"></i></a>
+
+    <div class="container" style="margin-top: 100px;">
+        <h2>Expense Summary</h2>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="summary-card">
+                    <h5>Total Expenses</h5>
+                    <h3>&#8377;{{total_expense}}</h3>
+                    <p class="text-muted">November</p>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h5>Expense Distribution</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>By Category</h6>
+                        <canvas id="categoryChart" width="100%" height="100"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>By Payment Method</h6>
+                        <canvas id="paymentMethodChart" width="100%" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row m-5">
+            <div class="col-12">
+                <h5>Monthly Payment Summary</h5>
+                <canvas id="monthlyChart" width="100%" height="50"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const categoryData = {
+            labels: ['Food', 'Travel', 'Entertainment', 'Health Care', 'Miscellaneous'],
+            datasets: [{
+                data: [{% for expense in category_expenses %} '{{expense}}', {% endfor %}],
+                backgroundColor: [
+                    '#F2A29B',
+                    '#5F4B8B',
+                    '#D66BB6',
+                    '#A3BCC2',
+                    '#00B5B5'
+                ],
+                borderWidth: 1
+            }]
+        };
+        
+        const paymentMethodData = {
+            labels: ['Card', 'Cash', 'UPI'],
+            datasets: [{
+                data: [{% for expense in payment_expenses %} '{{expense}}', {% endfor %}],
+                backgroundColor: [
+                    '#4A97B7',
+                    '#D4B94C',
+                    '#6AC58A'
+                ],
+                borderWidth: 1
+            }]
+        };
+        
+        const monthlyData = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [{
+                label: 'Monthly Expenses',
+                data: [{% for expense in monthly_expenses_data %} '{{expense}}', {% endfor %}],
+                backgroundColor: '#64A6A0',
+                borderColor: '#9F84BD',
+                borderWidth: 0
+            }]
+        };
+
+        // Render the charts
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'pie',
+            data: categoryData
+        });
+        
+        new Chart(document.getElementById('paymentMethodChart'), {
+            type: 'doughnut',
+            data: paymentMethodData
+        });
+
+        new Chart(document.getElementById('monthlyChart'), {
+            type: 'bar',
+            data: monthlyData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

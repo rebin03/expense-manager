@@ -27,4 +27,5 @@ urlpatterns = [
     path('index/', views.indexView.as_view(), name='index'),
     path('expense/remove/<int:pk>', views.ExpenceDeleteView.as_view(), name='expense-delete'),
     path('expense/change/<int:pk>', views.ExpenseUpdateView.as_view(), name='expense-update'),
+    path('expense/summary', views.ExpenseSummaryView.as_view(), name='expense-summary'),
 ]
