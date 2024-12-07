@@ -24,6 +24,14 @@ class Expense(models.Model):
         ('Travel', 'Travel'),
         ('Entertainment', 'Entertainment'),
         ('Health Care', 'Health Care'),
+        ('Housing', 'Housing'),
+        ('Transportation', 'Transportation'),
+        ('Education', 'Education'),
+        ('Personal Care', 'Personal Care'),
+        ('Debt Payments', 'Debt Payments'),
+        ('Savings & Investments', 'Savings & Investments'),
+        ('Gifts & Donations', 'Gifts & Donations'),
+        ('Insurance', 'Insurance'),
         ('Miscellaneous', 'Miscellaneous'),
     )
     
