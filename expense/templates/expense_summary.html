@@ -177,9 +177,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const categoryData = {
-            labels: ['Food', 'Travel', 'Entertainment', 'Health Care', 'Miscellaneous'],
+            labels: [{% for expense in category_expenses %} '{{expense.category}}', {% endfor %}],
             datasets: [{
-                data: [{% for expense in category_expenses %} '{{expense}}', {% endfor %}],
+                data: [{% for expense in category_expenses %} '{{expense.total}}', {% endfor %}],
                 backgroundColor: [
                     '#F2A29B',
                     '#5F4B8B',
@@ -192,9 +192,9 @@
         };
         
         const paymentMethodData = {
-            labels: ['Card', 'Cash', 'UPI'],
+            labels: [{% for expense in payment_expenses %} '{{expense.payment_method}}', {% endfor %}],
             datasets: [{
-                data: [{% for expense in payment_expenses %} '{{expense}}', {% endfor %}],
+                data: [{% for expense in payment_expenses %} '{{expense.total}}', {% endfor %}],
                 backgroundColor: [
                     '#4A97B7',
                     '#D4B94C',
