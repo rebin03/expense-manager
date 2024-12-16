@@ -13,6 +13,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
+    
+    owner = serializers.StringRelatedField(read_only=True)
+    
     class Meta:
         model = Expense
         fields = '__all__'
