@@ -25,13 +25,23 @@ class UserCreatView(APIView):
     
 class ExpenseListCreateView(APIView):
     
-    authentication_classes = [authentication.BasicAuthentication]
+    # authentication_classes = [authentication.BasicAuthentication]
+    authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ExpenseSerializer
     
     def get(self, request, *args, **kwargs):
         
         qs = Expense.objects.filter(owner=request.user)
+        
+        if 'category' in request.query_params:
+            search_text = request.query_params.get('category')
+            qs = qs.filter(category=search_text)
+            
+        if 'payment_method' in request.query_params:
+            search_text = request.query_params.get('payment_method')
+            qs = qs.filter(payment_method=search_text)
+        
         serializer = self.serializer_class(qs, many=True)
         
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -41,14 +51,16 @@ class ExpenseListCreateView(APIView):
         serializer = self.serializer_class(data=request.data)
         
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(owner=request.user)
+            
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 class ExpenseRetrieveUpdateDestroyView(APIView):
     
-    authentication_classes = [authentication.BasicAuthentication]
+    # authentication_classes = [authentication.BasicAuthentication]
+    authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ExpenseSerializer
     
